@@ -1,29 +1,45 @@
 # adapté de https://dev.to/alissonzampietro/the-amazing-journey-of-docker-compose-17lj
 version: '3.8'
 services:
+    #launch all 3 services
     api-service:
+        #build the container of the python flask api 
         build: .
+        #set build directory to the current directory
         volumes:
+            #define the volumes, maps the 'api/' directory on the host to 'usr/src/app/' in the container
             - ./api/:/usr/src/app/
         ports:
+            #map the port oh the container to the real port on the host machine here it just maps 5000 to 5000
             - 5000:5000
         environment:
+            #instuctions for the flask framework
             PORT: 5000
             FLASK_DEBUG: 1
     mariadb:
+        #build a mariadb services from mariadb:10.5 the image
         image: mariadb:10.5
+        #image to pull from docker hub
         container_name: mariadb_FLASK
+        #naming the container
         environment:
+            #define environement variables
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: mydatabase
             MYSQL_USER: maria
             MYSQL_PASSWORD: maria
         volumes:
+            #define volumes for mariadb to retain data if the container is turned off
             - ./mariadb:/var/lib/mysql
     adminer:
+        #build an adminer instance from the adminer image
         image: adminer
+        #pull the adminer image from docker hub
         container_name: adminer_FLASK
+        #naming the container
         depends_on:
+            #declare a dependency to the mariadb service
             - mariadb
         ports:
+            #maps the container port to the host machine port
             - 8080:8080
