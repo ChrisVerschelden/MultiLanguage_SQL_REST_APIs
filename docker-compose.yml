@@ -11,23 +11,22 @@ services:
             - ./api/:/usr/src/app/
         ports:
             #map the port oh the container to the real port on the host machine here it just maps 5000 to 5000
-            - 5000:3333
-        
-    mariadb:
-        #build a mariadb services from mariadb:10.5 the image
-        image: mariadb:10.5
-        #image to pull from docker hub
+            - 5000:3333 
+    mariadb:  
         container_name: mariadb_EXPRESS
-        #naming the container
+        image: mariadb
+        restart: always
         environment:
-            #define environement variables
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: mydatabase_node
+            MYSQL_DATABASE: mydatabase
             MYSQL_USER: maria
             MYSQL_PASSWORD: maria
+        ports:
+            - "3306:3306"
         volumes:
-            #define volumes for mariadb to retain data if the container is turned off
             - ./mariadb:/var/lib/mysql
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
     adminer:
         #build an adminer instance from the adminer image
         image: adminer

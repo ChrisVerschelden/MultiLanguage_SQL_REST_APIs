@@ -4,9 +4,9 @@ const app = express();
 const PORT = 3333;
 const conn = sql.createConnection({
     host: 'mariadb', 
-    user:'root', 
-    password: 'root',
-    database : 'mydatabase_node'
+    user:'maria', 
+    password: 'maria',
+    database : 'mydatabase'
 });
 
 conn.connect(function(err) {
