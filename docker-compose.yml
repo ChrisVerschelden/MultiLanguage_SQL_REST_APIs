@@ -6,16 +6,16 @@ services:
         #build the container of the python flask api 
         build: .
         #set build directory to the current directory
-        volumes:
+        #volumes:
             #define the volumes, maps the 'api/' directory on the host to 'usr/src/app/' in the container
-            - ./api/:/usr/src/app/
+            #- ./api/:/usr/src/app/
         ports:
             #map the port oh the container to the real port on the host machine here it just maps 5000 to 5000
             - 5000:3333 
     mariadb:  
         container_name: mariadb_EXPRESS
         image: mariadb
-        restart: always
+        #restart: always
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: mydatabase

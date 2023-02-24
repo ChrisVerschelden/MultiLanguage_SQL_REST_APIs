@@ -9,10 +9,16 @@ const conn = sql.createConnection({
     database : 'mydatabase'
 });
 
-conn.connect(function(err) {
-    if (err) throw err;
-    console.log("You are connected!");
-  });
+// conn.connect(function(err) {
+//     if (err) throw err;
+//     console.log("You are connected!");
+//   });
+
+app.get('/', (req, res) => {
+    res.json({
+        
+    })
+})
 
 app.get('/customers', (req, res) =>{    
     conn.query('select * from customers', (err, results) => {
