@@ -1,41 +1,57 @@
 # adapté de https://dev.to/alissonzampietro/the-amazing-journey-of-docker-compose-17lj
-version: '3.8'
+version: '1.0'
 services:
-    #launch all 3 services
-    api-service:
-        #build the container of the python flask api 
-        build: .
-        #set build directory to the current directory
-        #volumes:
-            #define the volumes, maps the 'api/' directory on the host to 'usr/src/app/' in the container
-            #- ./api/:/usr/src/app/
-        ports:
-            #map the port oh the container to the real port on the host machine here it just maps 5000 to 5000
-            - 5000:3333 
-    mariadb:  
+    #launch all 3 services, the database, the database admin interface and the Node JS Express API
+    mariadb:
+    #build a maria instance from the official adminer image
         container_name: mariadb_EXPRESS
+        #naming the container
         image: mariadb
-        #restart: always
+        #pull the official mariadb image from docker hub
+        restart: always
+        #restart in case of a crash
         environment:
+        #setting up environnement variables for the database
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: mydatabase
             MYSQL_USER: maria
             MYSQL_PASSWORD: maria
         ports:
+         #maps the container port to the host machine port
             - "3306:3306"
         volumes:
+         #gestion of volumes
             - ./mariadb:/var/lib/mysql
+            #copy the container internal volume for mariadb on the host for data persistance in case of the container shuting down
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+            #copy the init.sql file of the current directory in the init directory for mariadb in the container volume 
 
     adminer:
-        #build an adminer instance from the adminer image
-        image: adminer
-        #pull the adminer image from docker hub
+    #build an adminer instance from the official adminer image
         container_name: adminer_EXPRESS
         #naming the container
+        image: adminer
+        #pull the official adminer image from docker hub
+        restart: always
+        #restart in case of a crash
         depends_on:
-            #declare a dependency to the mariadb service
+        #declare a dependency to the mariadb service
             - mariadb
         ports:
-            #maps the container port to the host machine port
+         #maps the container port to the host machine port
             - 8080:8080
+
+    api-service:
+    #launch the docker container for the Node JS Express API as a service
+        container_name: api_EXPRESS
+        #naming the container
+        restart: always
+        #set the container to always restart if it crashes.(because handling errors is for the weaks)
+        depends_on:
+        #declare a dependency to the mariadb service
+            - mariadb
+        build: .
+        #build the docker file in the current directory
+        ports:
+        #map the port oh the container to the real port on the host machine here, 3000 in the container is proxied to 5000 on the host
+            - 5000:3333

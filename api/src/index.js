@@ -15,9 +15,12 @@ const conn = sql.createConnection({
 //   });
 
 app.get('/', (req, res) => {
-    res.json({
-        
-    })
+    res.end(
+        JSON.stringify({
+            "href":"/customers",
+            "rel":"customers"
+        })
+    )
 })
 
 app.get('/customers', (req, res) =>{    
